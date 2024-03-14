@@ -1,0 +1,1 @@
+../../../upstream/tests/test-password-entry-row.c

@@ -1,0 +1,7 @@
+project = libadwaita
+
+using version
+using config
+using test
+using install
+using dist

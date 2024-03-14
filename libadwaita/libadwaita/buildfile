@@ -1,0 +1,122 @@
+import! glib-compile-resources = glib-compile-resources%exe{glib-compile-resources}
+
+intf_libs = # Interface dependencies.
+impl_libs = # Implementation dependencies.
+
+# Required dependencies are (currently) not packaged and need to come from the
+# system package manager.
+#
+import intf_libs += gtk4%lib{gtk-4}    \
+                   glib2%lib{glib-2.0} \
+               appstream%lib{appstream}
+
+lib{adwaita}: {h c}{** -{*-win32 *-macos} -**.gresources...} \
+  $impl_libs $intf_libs
+
+lib{adwaita}: {c}{adw-settings-impl-win32}: include = ($cxx.target.class == 'windows')
+lib{adwaita}: {c}{adw-settings-impl-macos}: include = ($cxx.target.class == 'macos')
+
+# Resource bundle.
+#
+if ($glib-compile-resources != [null])
+{
+  define xml: file
+  xml{*}: extension = xml
+
+  define ui: file
+  ui{*}: extension = ui
+
+  define css: file
+  css{*}: extension = css
+
+  define png: file
+  png{*}: extension = png
+
+  define svg: file
+  svg{*}: extension = svg
+
+  c{~'/(.+)/'}: xml{~'/\1/'}
+  {{
+    diag glib-compile-resources ($<[0]) -> $>
+
+    d = $src_base
+    s = $path($<[0])
+    t = $out_base/$name($>).c
+
+    glib-compile-resources --sourcedir $d       \
+                           --generate-source $s \
+                           --target=$t
+  }}
+
+  res = {ui css png svg}{**}
+
+  c{adwaita.gresources.c}: xml{adwaita.gresources.xml} $res
+
+  # FIXME: At some point we'll want to derive path in above recipe, but this
+  # proved to be unreliable and racy with the current "bash" subset, so
+  # reassess this later.
+  #
+  c{stylesheet/adwaita-stylesheet.gresources.c}: {xml}{stylesheet/adwaita-stylesheet.gresources.xml} $res
+  {{
+    diag glib-compile-resources ($<[0]) -> $>
+
+    d = $src_base/stylesheet/
+    s = $path($<[0])
+    t = $out_base/stylesheet/$name($>).c
+
+    glib-compile-resources --sourcedir $d       \
+                           --generate-source $s \
+                           --target=$t
+  }}
+}
+
+lib{adwaita}: c{adwaita.gresources.c}
+lib{adwaita}: c{stylesheet/adwaita-stylesheet.gresources.c}
+
+# Build options.
+#
+# Note that tests (and inspector (opt)) expect <adwaita.h> so expose base.
+#
+c.poptions =+ "-I$out_root" "-I$src_root" \
+              "-I$out_base" "-I$src_base"
+
+obja{*}: c.poptions += -DLIBADWAITA_STATIC_BUILD -DADWAITA_COMPILATION
+objs{*}: c.poptions += -DLIBADWAITA_SHARED_BUILD -DADWAITA_COMPILATION
+
+# Export options.
+#
+lib{adwaita}:
+{
+  c.export.poptions = "-I$out_root" "-I$src_root" \
+                      "-I$out_base" "-I$src_base"
+  c.export.libs = $intf_libs
+}
+
+liba{adwaita}: c.export.poptions += -DLIBADWAITA_STATIC
+libs{adwaita}: c.export.poptions += -DLIBADWAITA_SHARED
+
+# For pre-releases use the complete version to make sure they cannot
+# be used in place of another pre-release or the final version. See
+# the version module for details on the version.* variable values.
+#
+if $version.pre_release
+  lib{adwaita}: bin.lib.version = "-$version.project_id"
+else
+  lib{adwaita}: bin.lib.version = "-$version.major.$version.minor"
+
+# GTK (and in this case, adwaita) export a single public header file that in turn
+# includes all the smaller header files into it. This is so that public headers
+# are never included directly; rather a single include is used in applications.
+#
+# https://developer.gnome.org/documentation/guidelines/programming/coding-style.html
+#
+h{adwaita.h}@./: install = include/
+
+# Install into the libadwaita/ subdirectory of, say, /usr/include/ recreating
+# subdirectories.
+#
+h{*}:
+{
+  install         = include/libadwaita/
+  install.subdirs = true
+}

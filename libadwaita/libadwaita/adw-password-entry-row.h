@@ -1,0 +1,1 @@
+../../upstream/src/adw-password-entry-row.h

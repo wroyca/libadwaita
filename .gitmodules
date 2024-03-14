@@ -1,0 +1,4 @@
+[submodule "upstream"]
+	path = upstream
+	url = https://gitlab.gnome.org/GNOME/libadwaita.git
+	branch = 1.4.4

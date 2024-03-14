@@ -1,0 +1,1 @@
+../../upstream/src/adw-view-switcher-bar.c

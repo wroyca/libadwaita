@@ -1,0 +1,1 @@
+../../upstream/src/adw-tab-bar-private.h

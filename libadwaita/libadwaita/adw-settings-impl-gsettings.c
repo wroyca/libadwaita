@@ -1,0 +1,1 @@
+../../upstream/src/adw-settings-impl-gsettings.c

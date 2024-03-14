@@ -1,0 +1,34 @@
+: 1
+name: libadwaita
+version: 1.4.4-a.0.z
+language: c
+summary: Building blocks for modern GNOME applications
+license: GPL-3.0-or-later ; GNU General Public License v3.0 or later.
+description-file: README.md
+url: https://github.com/wroyca/libadwaita
+src-url: https://gitlab.gnome.org/GNOME/libadwaita
+doc-url: https://gnome.pages.gitlab.gnome.org/libadwaita/doc/
+email: wroy@proton.me
+#build-error-email: wroy@proton.me
+depends: * build2 >= 0.16.0
+depends: * bpkg >= 0.16.0
+#depends: libhello ^1.0.0
+
+# CI builds and binary distribution packages.
+#
+builds: none
+
+bindist-fedora-builds: bindist
+bindist-fedora-build-include: linux_fedora_39-**
+bindist-fedora-build-exclude: **
+bindist-fedora-build-config:
+\
++bpkg.bindist.fedora:
++bbot.bindist.upload:
+b.create:config.c.std=c17
+sys:gtk4-devel
+sys:glib2-devel
+sys:appstream-devel
+sys:dbus-devel
+sys:dbus-x11
+\

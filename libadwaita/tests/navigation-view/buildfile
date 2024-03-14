@@ -1,0 +1,9 @@
+# GLib-CRITICAL **: 20:19:46.063: Did not see expected message Adwaita-CRITICAL **: *already has the same tag*
+
+./:
+
+# import libs = libadwaita%lib{adwaita}
+
+# exe{driver}: {h c}{**} $libs testscript{**}
+
+# c.poptions += -DADWAITA_COMPILATION -DADW_LOG_DOMAIN=\"Adwaita\"

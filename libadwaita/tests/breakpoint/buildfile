@@ -1,0 +1,10 @@
+# GLib-CRITICAL **: 20:26:29.549: Did not see expected message Adwaita-CRITICAL
+# **: *Unable to parse condition*
+
+./:
+
+# import libs = libadwaita%lib{adwaita}
+
+# exe{driver}: {h c}{**} $libs testscript{**}
+
+# c.poptions += -DADWAITA_COMPILATION -DADW_LOG_DOMAIN=\"Adwaita\"

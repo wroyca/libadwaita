@@ -1,0 +1,1 @@
+../../upstream/src/adw-main.c

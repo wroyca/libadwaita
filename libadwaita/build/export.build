@@ -1,0 +1,6 @@
+$out_root/
+{
+  include libadwaita/
+}
+
+export $out_root/libadwaita/$import.target

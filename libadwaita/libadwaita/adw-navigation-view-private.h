@@ -1,0 +1,1 @@
+../../upstream/src/adw-navigation-view-private.h

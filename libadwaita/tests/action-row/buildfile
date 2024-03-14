@@ -1,0 +1,10 @@
+# not ok /Adwaita/ActionRow/title_lines - FATAL-CRITICAL: adw_action_row_set_title_lines: assertion 'title_lines >= 0' failed
+# Bail out!
+
+./:
+
+# import libs = libadwaita%lib{adwaita}
+
+# exe{driver}: {h c}{**} $libs testscript{**}
+
+# c.poptions += -DADWAITA_COMPILATION -DADW_LOG_DOMAIN=\"Adwaita\"

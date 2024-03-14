@@ -1,0 +1,1 @@
+../../upstream/src/adw-indicator-bin-private.h

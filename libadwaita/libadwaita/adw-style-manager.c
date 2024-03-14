@@ -1,0 +1,1 @@
+../../upstream/src/adw-style-manager.c
